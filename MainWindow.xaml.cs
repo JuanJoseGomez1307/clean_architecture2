@@ -19,6 +19,18 @@ namespace WPFApp
         public MainWindow()
         {
             InitializeComponent();
+            CreateTask();
+        }
+
+        void AddMessage(string message)
+        {
+            int CurrentThreadId = Thread.CurrentThread.ManagedThreadId;
+            this.Dispatcher.Invoke(() => 
+            {
+                Messages.Content +=
+                    $"Mensaje: {message}, " +
+                    $"Hilo actual: {CurrentThreadId}\n";
+            });
         }
 
         void CreateTask()
@@ -47,7 +59,11 @@ namespace WPFApp
             );
 
             Task T6 = new Task((message) =>
-            MessageBox.Show(message), "Expresión Lambda con parámetros.");
+            MessageBox.Show(message.ToString()), "Expresión Lambda con parámetros.");
+
+            Task T7 = new Task(() => AddMessage("Ejecutando tarea."));
+            T7.Start();
+            AddMessage("En el hilo principal");
         }
 
           
